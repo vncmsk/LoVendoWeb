@@ -1,19 +1,20 @@
-import React from 'react'
-import '../../styles/login.css'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import '../../styles/login.css';
+import { Link } from 'react-router-dom';
+import logo from '../../imagenes/logo.jpg';
 
 
 const Login = () => {
     return (
 
         <body className="container">
-            <div className="row mt-5">
+            <div className="row mt-5 align-items-end">
 
-                <div className="col-sm-6">
-                    <img className="img-fluid" src="" width="550px" />
+                <div className="col-sm-5">
+                    <img className="img-fluid" src={logo} width="550px" />
                 </div>
 
-                <div className="col-md-4 ">
+                <div className="col-sm-4 ">
                     <main className="form-signin">
                         <form>
                             <h1 className="h3 mb-3 fw-normal">LoVendo.com</h1>
