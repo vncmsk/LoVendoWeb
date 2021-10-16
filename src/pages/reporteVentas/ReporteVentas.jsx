@@ -37,10 +37,8 @@ const ReporteVentas = () => {
                     <select className="seleccionarCiudad" id="inputGroupSelect01">
                         <option selected>Seleccione estado...</option>
                         <option value="1">Solicitado</option>
-                        <option value="2">En gestion</option>
-                        <option value="3">Enviado</option>
-                        <option value="4">Entregado</option>
-                        <option value="5">OK-Pagado</option>
+                        <option value="2">Enviado</option>
+                        <option value="3">Entregado</option>
                     </select>
                     <input type="number" placeholder="Cantidad" />
                     <input type="number" placeholder="valor" />
@@ -68,10 +66,8 @@ const ReporteVentas = () => {
                         <select className="Estado" id="inputGroupSelect01">
                             <option selected>Seleccione un estado...</option>
                             <option value="1">Solicitado</option>
-                            <option value="2">En gestion</option>
-                            <option value="3">Enviado</option>
-                            <option value="4">Entregado</option>
-                            <option value="5">OK-Pagado</option>
+                            <option value="2">Enviado</option>
+                            <option value="3">Entregado</option>
                         </select>
                     </div>
 
