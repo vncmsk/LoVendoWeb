@@ -1,6 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-
+import Header from '../../components/encabezado/encabezado';
 
 const ReporteVentas = () => {
     return (
@@ -9,33 +8,7 @@ const ReporteVentas = () => {
 
             <header>
 
-                <nav className="navbar navbar-expand-md bg-dark navbar-dark">
-
-                    <a className="navbar-brand " href="#">
-                        <h3>LoVendo.com</h3>
-                    </a>
-
-                    <div className="collapse navbar-collapse" id="collapsibleNavbar">
-                        <ul className="navbar-nav">
-                            <li className="nav-item">
-                                <Link className="nav-link" to='/login'>Inicio</Link>
-                            </li>
-
-                            <li className="nav-item">
-                                <Link className="nav-link" to='/reporte'>Reporte de ventas</Link>
-                            </li>
-
-                            <li className="nav-item">
-                                <Link className="nav-link" to='/vendedores'>Vendedores</Link>
-                            </li>
-
-                            <li className="nav-item">
-                                <Link className="nav-link" to='/usuarios'>Usuarios</Link>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-
+                <Header />
                 <br />
 
                 <div className="p-2 border w-75 m-auto p-3 mb-2 bg-warning text-black mt-6 d-xl-block d-lg-block d-sm-none text-center">
@@ -44,8 +17,9 @@ const ReporteVentas = () => {
 
             </header>
 
-            <div className=" flex container p-3 border border-secondary">
-                <form>
+            <div className="container p-3 border border-secondary">
+            <label className="d-flex text-light fs-6 bg-dark">Registro de ventas</label>
+                <form className='row row-cols-4'>
                     <input type="date" placeholder="fecha de venta" />
                     <select className="Vendedor" id="inputGroupSelect01">
                         <option selected>Seleccione un vendedor...</option>
@@ -77,8 +51,9 @@ const ReporteVentas = () => {
             <br />
 
             <div className="container p-2 border border-secondary">
-                <form className="row">
-
+            <label className="d-flex text-light fs-6 bg-dark">Consulta de ventas</label>
+                <form className="row align-items-center">
+                
                     <div className="col">
                         <label for="fecha1">Fecha inicial: </label>
                         <input id="fechaInicial" type="date" />
@@ -433,7 +408,6 @@ const ReporteVentas = () => {
 
                 </table>
             </div>
-
         </body>
 
     );

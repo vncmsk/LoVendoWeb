@@ -1,39 +1,11 @@
 import React from 'react'
-
-import { Link } from 'react-router-dom'
+import Header from '../../components/encabezado/encabezado';
 
 const gestionUsuarios = () => {
     return (
         <body>
             <header>
-                <div>
-                    <nav className="navbar navbar-expand-md bg-dark navbar-dark">
-
-                        <a className="navbar-brand " href="#">
-                            <h3>LoVendo.com</h3>
-                        </a>
-
-                        <div className="collapse navbar-collapse" id="collapsibleNavbar">
-                            <ul className="navbar-nav">
-                                <li className="nav-item">
-                                    <Link className="nav-link" to='/login'>Inicio</Link>
-                                </li>
-
-                                <li className="nav-item">
-                                    <Link className="nav-link" to='/reporte'>Reporte de ventas</Link>
-                                </li>
-
-                                <li className="nav-item">
-                                    <Link className="nav-link" to='/vendedores'>Vendedores</Link>
-                                </li>
-
-                                <li className="nav-item">
-                                    <Link className="nav-link" to='/usuarios'>Usuarios</Link>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
-                </div>
+            <Header/>
 
                 <br />
 

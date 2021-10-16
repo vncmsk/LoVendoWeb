@@ -11,7 +11,7 @@ const Login = () => {
             <div className="row mt-5 align-items-end">
 
                 <div className="col-sm-5">
-                    <img className="img-fluid" src={logo} width="550px" />
+                    <img className="img-fluid" src={logo} width="550px" alt="Logo" />
                 </div>
 
                 <div className="col-sm-4 ">

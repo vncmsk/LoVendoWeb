@@ -1,8 +1,8 @@
 import {BrowserRouter as Router,Route,Switch} from 'react-router-dom'
-import Login from './components/login/Login';
-import gestionUsuarios from './components/gestionUsuarios/gestionUsuarios';
-import gestionVendedores from './components/gestionVendedores/gestionVendedores';
-import ReporteVentas from './components/reporteVentas/ReporteVentas';
+import Login from './pages/login/Login';
+import gestionUsuarios from './pages/gestionUsuarios/gestionUsuarios';
+import gestionVendedores from './pages/gestionVendedores/gestionVendedores';
+import ReporteVentas from './pages/reporteVentas/ReporteVentas';
 import 'bootstrap/dist/css/bootstrap.css';
 
 function App() {
