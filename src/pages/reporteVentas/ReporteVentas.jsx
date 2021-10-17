@@ -17,38 +17,36 @@ const ReporteVentas = () => {
 
             </header>
 
-            <div className="container p-3 border border-secondary">
+            <div className="container p-2 border border-secondary border-4 my-3">
             <label className="d-flex text-light fs-6 bg-dark">Registro de ventas</label>
-                <form className='row row-cols-4'>
-                    <input type="date" placeholder="fecha de venta" />
-                    <select className="Vendedor" id="inputGroupSelect01">
+                <form className='row row-cols-5'>
+                    <input type="date" className="mx-4 mt-1" placeholder="fecha de venta" />
+                    <select className="Vendedor mx-4 mt-1" id="inputGroupSelect01">
                         <option selected>Seleccione un vendedor...</option>
                         <option value="1">Andres</option>
                         <option value="2">Lina</option>
                         <option value="3">Maria</option>
                     </select>
-                    <input type="text" placeholder="Articulo" />
-                    <select className="seleccionarCiudad" id="inputGroupSelect01">
+                    <input className="Articulo mx-4 mt-1" type="text" placeholder="Articulo" />
+                    <select className="seleccionarCiudad mx-4 mt-1" id="inputGroupSelect01">
                         <option selected>Seleccione una ciudad...</option>
                         <option value="1">San Andres</option>
                         <option value="2">Medellin</option>
                         <option value="3">Bogotá</option>
                     </select>
-                    <select className="seleccionarCiudad" id="inputGroupSelect01">
+                    <select className="seleccionarCiudad mx-4 my-1" id="inputGroupSelect01">
                         <option selected>Seleccione estado...</option>
                         <option value="1">Solicitado</option>
                         <option value="2">Enviado</option>
                         <option value="3">Entregado</option>
                     </select>
-                    <input type="number" placeholder="Cantidad" />
-                    <input type="number" placeholder="valor" />
-                    <button className='bg-warning'>Registrar venta</button>
+                    <input className="mx-4 my-1" type="number" placeholder="Cantidad" />
+                    <input className="mx-4 my-1" type="number" placeholder="valor" />
+                    <button className='bg-warning mx-4 my-1'>Registrar venta</button>
                 </form>
             </div>
 
-            <br />
-
-            <div className="container p-2 border border-secondary">
+            <div className="container p-2 border border-secondary border-4">
             <label className="d-flex text-light fs-6 bg-dark">Consulta de ventas</label>
                 <form className="row align-items-center">
                 
@@ -95,9 +93,7 @@ const ReporteVentas = () => {
                 </form>
             </div>
 
-            <br />
-
-            <div className="container W 60% p-2 border border-secondary">
+            <div className="container W 60% p-2 border border-secondary my-3 border-4">
                 <table className="col-12 col-md-4 col-md-4 col-lg-4 justify-content-center table table-striped table-dark">
 
                     <thead>
