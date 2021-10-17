@@ -66,7 +66,7 @@ const ReporteVentas = () => {
     }, [])
 
     return (
-        <body>
+        <div>
             <header>
                 <Header />
                 <div className="p-2 border w-75 mt-2 m-auto p-3 mb-2 bg-warning text-black mt-6 d-xl-block d-lg-block d-sm-none text-center">
@@ -76,7 +76,7 @@ const ReporteVentas = () => {
             <RegistroVentas />
             <ConsultaVentas />
             <TablaVentas listaVentas={ventas} />
-        </body>
+        </div>
     );
 }
 
@@ -95,20 +95,20 @@ const RegistroVentas = () => {
             <form className='row row-cols-5'>
                 <input type="date" className="mx-4 mt-1" name='fecha' onChange={(e) => { console.log("nombre: ", e.target.value) }} placeholder="fecha de venta" />
                 <select className="Vendedor mx-4 mt-1" name='vendedor' onChange={(e) => { console.log("nombre: ", e.target.value) }} id="inputGroupSelect01">
-                    <option selected>Seleccione un vendedor...</option>
+                    <option defaultValue>Seleccione un vendedor...</option>
                     <option value="Andres">Andres</option>
                     <option value="Lina">Lina</option>
                     <option value="Maria">Maria</option>
                 </select>
                 <input className="Articulo mx-4 mt-1" onChange={(e) => { SetNombre(e.target.value) }} name='articulo' type="text" placeholder="Articulo" />
                 <select className="seleccionarCiudad mx-4 mt-1" id="inputGroupSelect01">
-                    <option name='ciudad' selected>Seleccione una ciudad...</option>
+                    <option name='ciudad' defaultValue>Seleccione una ciudad...</option>
                     <option value="1">San Andres</option>
                     <option value="2">Medellin</option>
                     <option value="3">Bogotá</option>
                 </select>
                 <select className="seleccionarEstado mx-4 my-1" name='estado' id="inputGroupSelect01">
-                    <option selected>Seleccione estado...</option>
+                    <option defaultValue>Seleccione estado...</option>
                     <option value="1">Solicitado</option>
                     <option value="2">Enviado</option>
                     <option value="3">Entregado</option>
@@ -128,18 +128,18 @@ const ConsultaVentas = () => {
             <form className="row align-items-center">
 
                 <div className="col">
-                    <label for="fecha1">Fecha inicial: </label>
+                    <label htmlFor="fecha1">Fecha inicial: </label>
                     <input id="fechaInicial" name='fechaInicial' type="date" />
                 </div>
 
                 <div className="col">
-                    <label for="fecha2">Fecha final: </label>
+                    <label htmlFor="fecha2">Fecha final: </label>
                     <input id="fechaFinal" name='fechaFinal' type="date" />
                 </div>
 
                 <div className="col">
-                    <select selected className="Estado" name='estado' id="inputGroupSelect01">
-                        <option selected>Seleccione un estado...</option>
+                    <select defaultValue className="Estado" name='estado' id="inputGroupSelect01">
+                        <option defaultValue>Seleccione un estado...</option>
                         <option value="1">Solicitado</option>
                         <option value="2">Enviado</option>
                         <option value="3">Entregado</option>
@@ -148,7 +148,7 @@ const ConsultaVentas = () => {
 
                 <div className="col">
                     <select className="Vendedor" name='vendedor' id="inputGroupSelect01">
-                        <option selected>Seleccione un vendedor...</option>
+                        <option defaultValue>Seleccione un vendedor...</option>
                         <option value="1">Andres</option>
                         <option value="2">Lina</option>
                         <option value="3">Maria</option>
@@ -157,7 +157,7 @@ const ConsultaVentas = () => {
 
                 <div className="col">
                     <select className="seleccionarCiudad" name='ciudad' id="inputGroupSelect01">
-                        <option selected>Seleccione una ciudad...</option>
+                        <option defaultValue>Seleccione una ciudad...</option>
                         <option value="1">San Andres</option>
                         <option value="2">Medellin</option>
                         <option value="3">Bogotá</option>
@@ -179,7 +179,7 @@ const TablaVentas = ({ listaVentas }) => {
             <table className="col-12 col-md-4 col-md-4 col-lg-4 justify-content-center table table-striped table-dark">
 
                 <thead>
-                    <tr ALIGN="CENTER">
+                    <tr className="text-center">
                         <th scope="col ">#</th>
                         <th scope="col ">Fecha</th>
                         <th scope="col ">Cliente</th>
@@ -197,7 +197,7 @@ const TablaVentas = ({ listaVentas }) => {
                 <tbody>
                     {listaVentas.map((ventas) => {
                         return (
-                            <tr>
+                            <tr key={ventas.No}>
                             <td>{ventas.No}</td>
                             <td>{ventas.Fecha}</td>
                             <td>{ventas.Cliente}</td>
@@ -210,8 +210,7 @@ const TablaVentas = ({ listaVentas }) => {
                             <td>{ventas.Ciudad}</td>
                             <td>{ventas.Estado}</td>
                         </tr>
-                    )
-                    })}
+                    )})}
                 </tbody>
             </table>
         </div>
