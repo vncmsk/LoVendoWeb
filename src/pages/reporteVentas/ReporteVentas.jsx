@@ -3,6 +3,7 @@ import Header from '../../components/encabezado/encabezado';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const ventasBack = [
     {
         Fecha: "1/1/2021",
@@ -82,7 +83,7 @@ const RegistroVentas = ({ agregarVenta, listaVentas }) => {
             EnviarAlBack[key] = value;
         });
         
-        agregarVenta ([...listaVentas, EnviarAlBack])
+        
         toast.success('Venta registrada exitosamente')
         toast.error('Error, venta no registrada')
     };

@@ -10,20 +10,21 @@ function Header() {
                     
                 <div className="collapse navbar-collapse" id="collapsibleNavbar">
                     <ul className="navbar-nav">
+
                         <li className="nav-item">
-                            <Link className="nav-link" to='/login'>Inicio</Link>
+                            <Link className="nav-link" to='/reporte'>Gestion Ventas |</Link>
                         </li>
 
                         <li className="nav-item">
-                            <Link className="nav-link" to='/reporte'>Reporte de ventas</Link>
+                            <Link className="nav-link" to='/vendedores'>Gestion Vendedores |</Link>
                         </li>
 
                         <li className="nav-item">
-                            <Link className="nav-link" to='/vendedores'>Vendedores</Link>
+                            <Link className="nav-link" to='/usuarios'>Gestion Usuarios |</Link>
                         </li>
 
                         <li className="nav-item">
-                            <Link className="nav-link" to='/usuarios'>Usuarios</Link>
+                            <Link className="nav-link" to='/login'>Cerrar sesion |</Link>
                         </li>
                     </ul>
                 </div>
