@@ -2,57 +2,28 @@ import React, { useEffect, useState, useRef } from 'react'
 import Header from '../../components/encabezado/encabezado';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
-
-const ventasBack = [
-    {
-        Fecha: "1/1/2021",
-        Cliente: "Andres Rincon",
-        Item: "Gorra RedBull, Navy",
-        Cantidad: 100,
-        VrUnit: 7000,
-        Vendedor: "Lina Cuartas",
-        Ciudad: "Bogota",
-        Estado: "Enviado"
-    },
-    {
-        Fecha: "1/1/2021",
-        Cliente: "Andres Rincon",
-        Item: "Gorra RedBull, Navy",
-        Cantidad: 100,
-        VrUnit: 7000,
-        Vendedor: "Lina Cuartas",
-        Ciudad: "Bogota",
-        Estado: "Enviado"
-    },
-    {
-        Fecha: "1/1/2021",
-        Cliente: "Andres Rincon",
-        Item: "Gorra RedBull, Navy",
-        Cantidad: 100,
-        VrUnit: 7000,
-        Vendedor: "Lina Cuartas",
-        Ciudad: "Bogota",
-        Estado: "Enviado"
-    },
-    {
-        Fecha: "1/1/2021",
-        Cliente: "Andres Rincon",
-        Item: "Gorra RedBull, Red",
-        Cantidad: 100,
-        VrUnit: 7000,
-        Vendedor: "Lina Cuartas",
-        Ciudad: "San andres",
-        Estado: "Enviado"
-    },
-]
 
 const ReporteVentas = () => {
-    const [ventas, setVentas] = useState([]);
 
+    const [venta, setVenta] = useState([]);
+
+    
     useEffect(() => {
-        setVentas(ventasBack);
-    }, [])
+        
+    const obtenerVentas = async () => {
+
+        const options = {method: 'GET', url: 'http://localhost:5000/ventas'};
+        
+        axios.request(options).then(function (response) {
+          setVenta(response.data);
+        }).catch(function (error) {
+          console.error(error);
+        });
+    };
+    obtenerVentas();
+    }, [venta])
 
     return (
         <div>
@@ -62,9 +33,9 @@ const ReporteVentas = () => {
                     <h1>Gestión de ventas</h1>
                 </div>
             </header>
-            <RegistroVentas agregarVenta={setVentas} listaVentas={ventas} />
+            <RegistroVentas agregarVenta={setVenta} listaVentas={venta} />
             <ConsultaVentas />
-            <TablaVentas listaVentas={ventas} />
+            <TablaVentas listaVentas={venta} />
             <ToastContainer position="bottom-center" autoClose={2000} />
         </div>
     );
@@ -74,7 +45,7 @@ const RegistroVentas = ({ agregarVenta, listaVentas }) => {
 
     const form = useRef(null);
 
-    const submitFormulario = (e) => {
+    const submitFormulario = async (e) => {
         e.preventDefault();
         const fd = new FormData(form.current);
 
@@ -82,10 +53,25 @@ const RegistroVentas = ({ agregarVenta, listaVentas }) => {
         fd.forEach((value, key) => {
             EnviarAlBack[key] = value;
         });
-        
-        
-        toast.success('Venta registrada exitosamente')
-        toast.error('Error, venta no registrada')
+
+        const options = {
+            method: 'POST',
+            url: 'http://localhost:5000/ventas',
+            headers: { 'Content-Type': 'application/json' },
+            data: {
+                Fecha: EnviarAlBack.Fecha, Cliente: EnviarAlBack.Cliente, Item: EnviarAlBack.Item,
+                Cantidad: EnviarAlBack.Cantidad, VrUnit: EnviarAlBack.VrUnit, Vendedor: EnviarAlBack.Vendedor,
+                Ciudad: EnviarAlBack.Ciudad, Estado: EnviarAlBack.Estado
+            }
+        };
+
+        await axios.request(options).then(function (response) {
+            console.log(response.data);
+            toast.success('Venta registrada exitosamente')
+        }).catch(function (error) {
+            console.error(error);
+            toast.error('Error, venta no registrada')
+        });
     };
 
     return (
@@ -182,6 +168,7 @@ const TablaVentas = ({ listaVentas }) => {
 
                 <thead>
                     <tr className="text-center">
+                        <th scope="col ">Id</th>
                         <th scope="col ">Fecha</th>
                         <th scope="col ">Cliente</th>
                         <th scope="col ">Item</th>
@@ -194,17 +181,18 @@ const TablaVentas = ({ listaVentas }) => {
                 </thead>
 
                 <tbody>
-                    {listaVentas.map((ventas) => {
+                    {listaVentas.map((venta) => {
                         return (
-                            <tr key={ventas.No}>
-                                <td>{ventas.Fecha}</td>
-                                <td>{ventas.Cliente}</td>
-                                <td>{ventas.Item}</td>
-                                <td>{ventas.Cantidad}</td>
-                                <td>${ventas.VrUnit}</td>
-                                <td>{ventas.Vendedor}</td>
-                                <td>{ventas.Ciudad}</td>
-                                <td>{ventas.Estado}</td>
+                            <tr>
+                                <td>{venta._id}</td>
+                                <td>{venta.Fecha}</td>
+                                <td>{venta.Cliente}</td>
+                                <td>{venta.Item}</td>
+                                <td>{venta.Cantidad}</td>
+                                <td>${venta.VrUnit}</td>
+                                <td>{venta.Vendedor}</td>
+                                <td>{venta.Ciudad}</td>
+                                <td>{venta.Estado}</td>
                             </tr>
                         )
                     })}

@@ -3,18 +3,17 @@ import '../../styles/login.css';
 import { Link } from 'react-router-dom';
 import logo from '../../imagenes/logo.jpg';
 
-
 const Login = () => {
     return (
 
-        <body className="container">
-            <div className="row mt-5 align-items-end">
+        <body>
+            <div className="row align-items-end">
 
-                <div className="col-sm-5">
-                    <img className="img-fluid" src={logo} width="550px" alt="Logo" />
+                <div className="col-6 row align-items-center mt-5 p-3">
+                    <img className="img-fluid" src={logo} width="200px" alt="Logo" />
                 </div>
 
-                <div className="col-sm-4 ">
+                <div className="col-3 col align-self-end">
                     <main className="form-signin">
                         <form>
                             <h1 className="h3 mb-3 fw-normal">LoVendo.com</h1>
@@ -30,7 +29,6 @@ const Login = () => {
                             </div>
 
                             <div className="checkbox mb-3">
-                                <br />
                                 <label>
                                     <input type="checkbox" value="Recordarme" /> Recordarme
                                 </label>
@@ -43,11 +41,8 @@ const Login = () => {
                         </form>
                     </main>
                 </div>
-
             </div>
-
         </body>
-
     );
 }
 
