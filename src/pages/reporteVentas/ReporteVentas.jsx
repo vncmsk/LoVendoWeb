@@ -3,26 +3,24 @@ import Header from '../../components/encabezado/encabezado';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-
+import { nanoid } from 'nanoid';
 
 const ReporteVentas = () => {
 
     const [venta, setVenta] = useState([]);
 
-    
     useEffect(() => {
-        
-    const obtenerVentas = async () => {
 
-        const options = {method: 'GET', url: 'http://localhost:5000/ventas'};
-        
-        axios.request(options).then(function (response) {
-          setVenta(response.data);
-        }).catch(function (error) {
-          console.error(error);
-        });
-    };
-    obtenerVentas();
+        const obtenerVentas = async () => {
+
+            const options = { method: 'GET', url: 'http://localhost:5000/ventas' };
+            axios.request(options).then(function (response) {
+                setVenta(response.data);
+            }).catch(function (error) {
+                console.error(error);
+            });
+        };
+        obtenerVentas();
     }, [venta])
 
     return (
@@ -86,7 +84,7 @@ const RegistroVentas = ({ agregarVenta, listaVentas }) => {
                     <option value="Maria">Maria</option>
                 </select>
                 <input required className="Articulo mx-4 mt-1" name='Item' type="text" placeholder="Articulo" />
-                <input required className="Articulo mx-4 mt-1" name='Cliente' type="text" placeholder="Cliente" />
+                <input required className="Cliente mx-4 mt-1" name='Cliente' type="text" placeholder="Cliente" />
                 <select required className="seleccionarCiudad mx-4 mt-1" name='Ciudad' id="inputGroupSelect01">
                     <option defaultValue>Seleccione una ciudad...</option>
                     <option value="Bogota">Bogotá</option>
@@ -102,6 +100,7 @@ const RegistroVentas = ({ agregarVenta, listaVentas }) => {
                 <input required className="mx-4 my-1" type="number" name='Cantidad' placeholder="Cantidad" />
                 <input required className="mx-4 my-1" type="number" name='VrUnit' placeholder="valor" />
                 <button type="submit" className='bg-warning mx-4 mt-4'>Registrar venta</button>
+                <button type="reset" className='bg-warning mx-4 mt-4'>Limpiar</button>
             </form>
         </div>
     );
@@ -168,38 +167,111 @@ const TablaVentas = ({ listaVentas }) => {
 
                 <thead>
                     <tr className="text-center">
-                        <th scope="col ">Id</th>
                         <th scope="col ">Fecha</th>
                         <th scope="col ">Cliente</th>
                         <th scope="col ">Item</th>
-                        <th scope="col ">Cantidad</th>
-                        <th scope="col ">Vr. Unit</th>
+                        <th scope="col ">Cant.</th>
+                        <th scope="col ">Vr.Unit</th>
                         <th scope="col ">Vendedor</th>
                         <th scope="col ">Ciudad</th>
-                        <th scope="col ">Estado Pedido</th>
+                        <th scope="col ">Estado</th>
+                        <th scope="col ">Acciones</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     {listaVentas.map((venta) => {
                         return (
-                            <tr>
-                                <td>{venta._id}</td>
-                                <td>{venta.Fecha}</td>
-                                <td>{venta.Cliente}</td>
-                                <td>{venta.Item}</td>
-                                <td>{venta.Cantidad}</td>
-                                <td>${venta.VrUnit}</td>
-                                <td>{venta.Vendedor}</td>
-                                <td>{venta.Ciudad}</td>
-                                <td>{venta.Estado}</td>
-                            </tr>
-                        )
+                            <EditarEliminar key={nanoid()} venta={venta} />
+                        );
                     })}
                 </tbody>
             </table>
         </div>
     )
+};
+
+const EditarEliminar = ({ venta }) => {
+    const [editar, setEditar] = useState(false);
+    const [datosNuevo, setDatosNuevo] = useState({
+        Fecha: venta.Fecha,
+        Cliente: venta.Cliente,
+        Item: venta.Item,
+        Cantidad: venta.Cantidad,
+        VrUnit: venta.VrUnit,
+        Vendedor: venta.Vendedor,
+        Ciudad: venta.Ciudad,
+        Estado: venta.Estado,
+    });
+
+    const actualizacion = () => {
+        console.log(datosNuevo);
+    }
+    return (
+        <tr>
+            {editar ? (
+                //sino toca solo inputs
+
+                <>
+                    <td>{venta.Fecha}</td>
+                    <td><input className="col" name='Cliente' type="text" value={datosNuevo.Cliente}
+                        onChange={(e) => setDatosNuevo({ ...datosNuevo, Cliente: e.target.value })}
+                    /></td>
+                    <td><input className="input-group input-group-sm mb-1" name='Item' type="text" value={datosNuevo.Item}
+                        onChange={(e) => setDatosNuevo({ ...datosNuevo, Item: e.target.value })}
+                    /></td>
+                    <td><input className="input-group input-group-sm mb-1" type="number" name='Cantidad' value={datosNuevo.Cantidad}
+                        onChange={(e) => setDatosNuevo({ ...datosNuevo, Cantidad: e.target.value })}
+                    /></td>
+                    <td><input className="input-group input-group-sm mb-1" type="number" name='VrUnit' value={datosNuevo.VrUnit}
+                        onChange={(e) => setDatosNuevo({ ...datosNuevo, VrUnit: e.target.value })}
+                    /></td>
+                    <td><select name='Vendedor' id="inputGroupSelect01"
+                        onChange={(e) => setDatosNuevo({ ...datosNuevo, Item: e.target.Vendedor })}>
+                        <option value>{datosNuevo.Vendedor}</option>
+                        <option value="Andres">Andres</option>
+                        <option value="Lina">Lina</option>
+                        <option value="Maria">Maria</option>
+                    </select></td>
+                    <td><select name='Ciudad' id="inputGroupSelect01"
+                        onChange={(e) => setDatosNuevo({ ...datosNuevo, Ciudad: e.target.value })}>
+                        <option value>{datosNuevo.Ciudad}</option>
+                        <option value="Bogota">Bogotá</option>
+                        <option value="San Andres">San Andres</option>
+                        <option value="Medellin">Medellin</option>
+                    </select></td>
+                    <td><select name='Estado' id="inputGroupSelect01"
+                        onChange={(e) => setDatosNuevo({ ...datosNuevo, Estado: e.target.value })}>
+                        <option value>{datosNuevo.Estado}</option>
+                        <option value="Solicitado">Solicitado</option>
+                        <option value="Enviado">Enviado</option>
+                        <option value="Entregado">Entregado</option>
+                    </select></td>
+                </>
+            ) : (
+                <>
+                    <td>{venta.Fecha}</td>
+                    <td>{venta.Cliente}</td>
+                    <td>{venta.Item}</td>
+                    <td>{venta.Cantidad}</td>
+                    <td>${venta.VrUnit}</td>
+                    <td>{venta.Vendedor}</td>
+                    <td>{venta.Ciudad}</td>
+                    <td>{venta.Estado}</td>
+                </>
+            )}
+            <td>
+                <div className='flex w-full justify-around'>
+                    {editar ? (
+                        <i onClick ={() => actualizacion()} className="fas fa-check"></i>
+                    ) : (
+                        <i onClick ={() => setEditar(!editar)} className="fas fa-pen-square"></i>
+                    )}
+                    <i className="fas fa-trash-alt" />
+                </div>
+            </td>
+        </tr>
+    );
 };
 
 export default ReporteVentas;
