@@ -8,11 +8,10 @@ import { nanoid } from 'nanoid';
 const ReporteVentas = () => {
 
     const [venta, setVenta] = useState([]);
+    const [actualizar, setActualizar] = useState(true);
 
     useEffect(() => {
-
         const obtenerVentas = async () => {
-
             const options = { method: 'GET', url: 'http://localhost:5000/ventas' };
             axios.request(options).then(function (response) {
                 setVenta(response.data);
@@ -20,8 +19,11 @@ const ReporteVentas = () => {
                 console.error(error);
             });
         };
-        obtenerVentas();
-    }, [venta])
+        if (actualizar) {
+            obtenerVentas();
+            setActualizar(false);
+        };
+    }, [actualizar]);
 
     return (
         <div>
@@ -31,15 +33,15 @@ const ReporteVentas = () => {
                     <h1>Gestión de ventas</h1>
                 </div>
             </header>
-            <RegistroVentas agregarVenta={setVenta} listaVentas={venta} />
+            <RegistroVentas setActualizar={setActualizar} />
             <ConsultaVentas />
-            <TablaVentas listaVentas={venta} />
+            <TablaVentas listaVentas={venta} setActualizar={setActualizar} />
             <ToastContainer position="bottom-center" autoClose={2000} />
         </div>
     );
 };
 
-const RegistroVentas = ({ agregarVenta, listaVentas }) => {
+const RegistroVentas = ({ setActualizar }) => {
 
     const form = useRef(null);
 
@@ -65,7 +67,8 @@ const RegistroVentas = ({ agregarVenta, listaVentas }) => {
 
         await axios.request(options).then(function (response) {
             console.log(response.data);
-            toast.success('Venta registrada exitosamente')
+            toast.warn('Venta registrada exitosamente')
+            setActualizar(true);
         }).catch(function (error) {
             console.error(error);
             toast.error('Error, venta no registrada')
@@ -107,7 +110,6 @@ const RegistroVentas = ({ agregarVenta, listaVentas }) => {
 };
 
 const ConsultaVentas = () => {
-
 
     return (
         <div className="container p-2 border border-secondary border-4">
@@ -159,14 +161,18 @@ const ConsultaVentas = () => {
     );
 };
 
-const TablaVentas = ({ listaVentas }) => {
+const TablaVentas = ({ listaVentas, setActualizar }) => {
+
+    useEffect(() => {
+
+    }, [listaVentas]);
 
     return (
         <div className="container W 60% p-2 border border-secondary my-3 border-4">
             <table className="col-12 col-md-4 col-md-4 col-lg-4 justify-content-center table table-striped table-dark">
-
                 <thead>
                     <tr className="text-center">
+                        <th scope="col ">ID</th>
                         <th scope="col ">Fecha</th>
                         <th scope="col ">Cliente</th>
                         <th scope="col ">Item</th>
@@ -178,11 +184,10 @@ const TablaVentas = ({ listaVentas }) => {
                         <th scope="col ">Acciones</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     {listaVentas.map((venta) => {
                         return (
-                            <EditarEliminar key={nanoid()} venta={venta} />
+                            <EditarEliminar key={nanoid()} venta={venta} setActualizar={setActualizar} />
                         );
                     })}
                 </tbody>
@@ -191,10 +196,10 @@ const TablaVentas = ({ listaVentas }) => {
     )
 };
 
-const EditarEliminar = ({ venta }) => {
+const EditarEliminar = ({ venta, setActualizar }) => {
+
     const [editar, setEditar] = useState(false);
     const [datosNuevo, setDatosNuevo] = useState({
-        Fecha: venta.Fecha,
         Cliente: venta.Cliente,
         Item: venta.Item,
         Cantidad: venta.Cantidad,
@@ -204,43 +209,79 @@ const EditarEliminar = ({ venta }) => {
         Estado: venta.Estado,
     });
 
-    const actualizacion = () => {
-        console.log(datosNuevo);
-    }
+    const actualizaVenta = async () => {
+
+        const options = {
+            method: 'PATCH',
+            url: `http://localhost:5000/ventas/${venta._id}/`,
+            headers: { 'Content-Type': 'application/json' },
+            data: { ...datosNuevo },
+        };
+        await axios.request(options).then(function (response) {
+            console.log(response.data);
+            toast.warn('Venta actualizada con éxito');
+            setEditar(false);
+            setActualizar(true);
+        })
+            .catch(function (error) {
+                toast.error('Error modificando la venta');
+                console.error(error);
+            });
+    };
+
+    const eliminarVenta = async () => {
+
+        const options = {
+            method: 'DELETE',
+            url: `http://localhost:5000/ventas/${venta._id}/`,
+            headers: { 'Content-Type': 'application/json' },
+            data: { ...datosNuevo },
+        };
+        await axios.request(options).then(function (response) {
+            console.log(response.data);
+            toast.warn('Venta eliminada con éxito');
+            setActualizar(true);
+        })
+            .catch(function (error) {
+                toast.error('Error eliminando la venta');
+                console.error(error);
+            });
+
+    };
+
     return (
         <tr>
             {editar ? (
-                //sino toca solo inputs
-
                 <>
-                    <td>{venta.Fecha}</td>
-                    <td><input className="col" name='Cliente' type="text" value={datosNuevo.Cliente}
+                    <td className="align-middle">{venta._id}</td>
+                    <td className="align-middle w-50 text-center">{venta.Fecha}</td>
+                    <td className="align-middle"><input className="w-20" name='Cliente' value={datosNuevo.Cliente}
                         onChange={(e) => setDatosNuevo({ ...datosNuevo, Cliente: e.target.value })}
                     /></td>
-                    <td><input className="input-group input-group-sm mb-1" name='Item' type="text" value={datosNuevo.Item}
+                    <td className="align-middle"><input className="w-20" name='Item' value={datosNuevo.Item}
                         onChange={(e) => setDatosNuevo({ ...datosNuevo, Item: e.target.value })}
                     /></td>
-                    <td><input className="input-group input-group-sm mb-1" type="number" name='Cantidad' value={datosNuevo.Cantidad}
+                    <td className="align-middle"><input className="input-group input-group-sm mb-1 text-center" type="number" value={datosNuevo.Cantidad}
                         onChange={(e) => setDatosNuevo({ ...datosNuevo, Cantidad: e.target.value })}
                     /></td>
-                    <td><input className="input-group input-group-sm mb-1" type="number" name='VrUnit' value={datosNuevo.VrUnit}
+                    <td className="align-middle"><input className="input-group input-group-sm mb-1" type="number" value={datosNuevo.VrUnit}
                         onChange={(e) => setDatosNuevo({ ...datosNuevo, VrUnit: e.target.value })}
                     /></td>
-                    <td><select name='Vendedor' id="inputGroupSelect01"
+                    <td className="align-middle"><select id="inputGroupSelect01"
                         onChange={(e) => setDatosNuevo({ ...datosNuevo, Item: e.target.Vendedor })}>
                         <option value>{datosNuevo.Vendedor}</option>
                         <option value="Andres">Andres</option>
                         <option value="Lina">Lina</option>
                         <option value="Maria">Maria</option>
                     </select></td>
-                    <td><select name='Ciudad' id="inputGroupSelect01"
+                    <td className="align-middle"><select id="inputGroupSelect01"
                         onChange={(e) => setDatosNuevo({ ...datosNuevo, Ciudad: e.target.value })}>
                         <option value>{datosNuevo.Ciudad}</option>
                         <option value="Bogota">Bogotá</option>
                         <option value="San Andres">San Andres</option>
                         <option value="Medellin">Medellin</option>
                     </select></td>
-                    <td><select name='Estado' id="inputGroupSelect01"
+                    <td className="align-middle"><select id="inputGroupSelect01"
                         onChange={(e) => setDatosNuevo({ ...datosNuevo, Estado: e.target.value })}>
                         <option value>{datosNuevo.Estado}</option>
                         <option value="Solicitado">Solicitado</option>
@@ -250,25 +291,56 @@ const EditarEliminar = ({ venta }) => {
                 </>
             ) : (
                 <>
-                    <td>{venta.Fecha}</td>
-                    <td>{venta.Cliente}</td>
-                    <td>{venta.Item}</td>
-                    <td>{venta.Cantidad}</td>
-                    <td>${venta.VrUnit}</td>
-                    <td>{venta.Vendedor}</td>
-                    <td>{venta.Ciudad}</td>
-                    <td>{venta.Estado}</td>
+                    <td className="align-middle text-center">{venta._id}</td>
+                    <td className="align-middle text-center">{venta.Fecha}</td>
+                    <td className="align-middle">{venta.Cliente}</td>
+                    <td className="align-middle">{venta.Item}</td>
+                    <td className="align-middle text-center">{venta.Cantidad}</td>
+                    <td className="align-middle">${venta.VrUnit}</td>
+                    <td className="align-middle">{venta.Vendedor}</td>
+                    <td className="align-middle">{venta.Ciudad}</td>
+                    <td className="align-middle">{venta.Estado}</td>
                 </>
             )}
-            <td>
-                <div className='flex w-full justify-around'>
+            <td className="align-middle text-center ">
+                <div className='row row-cols-2'>
                     {editar ? (
-                        <i onClick ={() => actualizacion()} className="fas fa-check"></i>
+                        <>
+                            <i onClick={() => actualizaVenta()} className='fas fa-check'
+                                data-toggle="tooltip" data-placement="bottom" title="Guardar cambios" />
+                            <i onClick={() => setEditar(!editar)} className='far fa-times-circle'
+                                data-toggle="tooltip" data-placement="bottom" title="Cancelar edicion" />
+                        </>
                     ) : (
-                        <i onClick ={() => setEditar(!editar)} className="fas fa-pen-square"></i>
+                        <>
+                            <i onClick={() => setEditar(!editar)} className='fas fa-pen-square'
+                                data-toggle="tooltip" data-placement="bottom" title="Editar" />
+                            <i onClick={() => eliminarVenta()} className="fas fa-trash-alt"
+                                data-toggle="tooltip" data-placement="bottom" title="Eliminar venta" />
+                        </>
                     )}
-                    <i className="fas fa-trash-alt" />
+
                 </div>
+                <div class="modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>¿Esta seguro de eliminar este registro?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary">Eliminar</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </td>
         </tr>
     );
