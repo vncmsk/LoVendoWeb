@@ -33,15 +33,29 @@ const ReporteVentas = () => {
                     <h1>Gestión de ventas</h1>
                 </div>
             </header>
-            <RegistroVentas setActualizar={setActualizar} />
-            <ConsultaVentas />
+            <RegistroVentas setActualizar={setActualizar} actualizar={actualizar} />
             <TablaVentas listaVentas={venta} setActualizar={setActualizar} />
             <ToastContainer position="bottom-center" autoClose={2000} />
         </div>
     );
 };
 
-const RegistroVentas = ({ setActualizar }) => {
+const RegistroVentas = ({ setActualizar, actualizar }) => {
+
+    const [vendedores, setVendedores] = useState([]);
+
+    useEffect(() => {
+        const obtenerVendedores = async () => {
+            const options = { method: 'GET', url: 'http://localhost:5000/vendedores' };
+            axios.request(options).then(function (response) {
+                setVendedores(response.data);
+            }).catch(function (error) {
+                console.error(error);
+            });
+        };
+
+        obtenerVendedores();
+    }, [actualizar]);
 
     const form = useRef(null);
 
@@ -76,15 +90,17 @@ const RegistroVentas = ({ setActualizar }) => {
     };
 
     return (
-        <div className="container p-2 border border-secondary border-4 my-3">
+        <div className="container p-2 border border-secondary border-4 my-2">
             <label className="d-flex text-light fs-6 bg-dark">Registro de ventas</label>
             <form ref={form} className='row row-cols-5' onSubmit={submitFormulario}>
                 <input required type="date" className="mx-4 mt-1" name='Fecha' placeholder="fecha de venta" />
                 <select required className="Vendedor mx-4 mt-1" name='Vendedor' id="inputGroupSelect01">
                     <option defaultValue>Seleccione un vendedor...</option>
-                    <option value="Andres">Andres</option>
-                    <option value="Lina">Lina</option>
-                    <option value="Maria">Maria</option>
+                    {vendedores.map((v) => {
+                        return (
+                            <option key={nanoid()}>{v.nombre}</option>
+                        )
+                    })}
                 </select>
                 <input required className="Articulo mx-4 mt-1" name='Item' type="text" placeholder="Articulo" />
                 <input required className="Cliente mx-4 mt-1" name='Cliente' type="text" placeholder="Cliente" />
@@ -102,60 +118,8 @@ const RegistroVentas = ({ setActualizar }) => {
                 </select>
                 <input required className="mx-4 my-1" type="number" name='Cantidad' placeholder="Cantidad" />
                 <input required className="mx-4 my-1" type="number" name='VrUnit' placeholder="valor" />
-                <button type="submit" className='bg-warning mx-4 mt-4'>Registrar venta</button>
-                <button type="reset" className='bg-warning mx-4 mt-4'>Limpiar</button>
-            </form>
-        </div>
-    );
-};
-
-const ConsultaVentas = () => {
-
-    return (
-        <div className="container p-2 border border-secondary border-4">
-            <label className="d-flex text-light fs-6 bg-dark">Consulta de ventas</label>
-            <form className="row align-items-center">
-
-                <div className="col">
-                    <label htmlFor="fecha1">Fecha inicial: </label>
-                    <input id="fechaInicial" name='fechaInicial' type="date" />
-                </div>
-
-                <div className="col">
-                    <label htmlFor="fecha2">Fecha final: </label>
-                    <input id="fechaFinal" name='fechaFinal' type="date" />
-                </div>
-
-                <div className="col">
-                    <select defaultValue className="Estado" name='estado' id="inputGroupSelect01">
-                        <option defaultValue>Seleccione un estado...</option>
-                        <option value="1">Solicitado</option>
-                        <option value="2">Enviado</option>
-                        <option value="3">Entregado</option>
-                    </select>
-                </div>
-
-                <div className="col">
-                    <select className="Vendedor" name='vendedor' id="inputGroupSelect01">
-                        <option defaultValue>Seleccione un vendedor...</option>
-                        <option value="1">Andres</option>
-                        <option value="2">Lina</option>
-                        <option value="3">Maria</option>
-                    </select>
-                </div>
-
-                <div className="col">
-                    <select className="seleccionarCiudad" name='ciudad' id="inputGroupSelect01">
-                        <option defaultValue>Seleccione una ciudad...</option>
-                        <option value="1">San Andres</option>
-                        <option value="2">Medellin</option>
-                        <option value="3">Bogotá</option>
-                    </select>
-                </div>
-
-                <div className="col">
-                    <button type="button" className="bg-warning">Buscar</button>
-                </div>
+                <button type="submit" className='bg-warning mx-4 mt-2'>Registrar venta</button>
+                <button type="reset" className='bg-warning mx-4 mt-2'>Limpiar</button>
             </form>
         </div>
     );
@@ -163,42 +127,60 @@ const ConsultaVentas = () => {
 
 const TablaVentas = ({ listaVentas, setActualizar }) => {
 
-    useEffect(() => {
+    const [busqueda, setBusqueda] = useState("");
+    const [ventasFiltradas, setVentasFiltradas] = useState(listaVentas);
 
-    }, [listaVentas]);
+    useEffect(() => {
+        setVentasFiltradas(
+            listaVentas.filter((elemento) => {
+                return JSON.stringify(elemento).toLowerCase().includes(busqueda.toLowerCase());
+            })
+        );
+    }, [busqueda, listaVentas]);
 
     return (
-        <div className="container W 60% p-2 border border-secondary my-3 border-4">
-            <table className="col-12 col-md-4 col-md-4 col-lg-4 justify-content-center table table-striped table-dark">
-                <thead>
-                    <tr className="text-center">
-                        <th scope="col ">ID</th>
-                        <th scope="col ">Fecha</th>
-                        <th scope="col ">Cliente</th>
-                        <th scope="col ">Item</th>
-                        <th scope="col ">Cant.</th>
-                        <th scope="col ">Vr.Unit</th>
-                        <th scope="col ">Vendedor</th>
-                        <th scope="col ">Ciudad</th>
-                        <th scope="col ">Estado</th>
-                        <th scope="col ">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {listaVentas.map((venta) => {
-                        return (
-                            <EditarEliminar key={nanoid()} venta={venta} setActualizar={setActualizar} />
-                        );
-                    })}
-                </tbody>
-            </table>
-        </div>
+        <>
+            <div className="container p-1 border border-secondary my-1 border-3">
+                <div>
+                    <input value={busqueda} onChange={(e) => setBusqueda(e.target.value)}
+                        className="mx-3" placeHolder="Buscar">
+                    </input>
+                </div>
+            </div>
+            <div className="container W 60% p-1 border border-secondary my-2 border-4">
+
+                <table className="col-12 col-md-4 col-md-4 col-lg-4 justify-content-center table table-striped table-dark">
+                    <thead>
+                        <tr className="text-center">
+                            <th scope="col ">ID</th>
+                            <th scope="col ">Fecha</th>
+                            <th scope="col ">Cliente</th>
+                            <th scope="col ">Item</th>
+                            <th scope="col ">Cant.</th>
+                            <th scope="col ">Vr.Unit</th>
+                            <th scope="col ">Vendedor</th>
+                            <th scope="col ">Ciudad</th>
+                            <th scope="col ">Estado</th>
+                            <th scope="col ">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {ventasFiltradas.map((venta) => {
+                            return (
+                                <EditarEliminar key={nanoid()} venta={venta} setActualizar={setActualizar} />
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        </>
     )
 };
 
-const EditarEliminar = ({ venta, setActualizar }) => {
+const EditarEliminar = ({ venta, setActualizar, actualizar }) => {
 
     const [editar, setEditar] = useState(false);
+    const [vendedores, setVendedores] = useState([]);
     const [datosNuevo, setDatosNuevo] = useState({
         Cliente: venta.Cliente,
         Item: venta.Item,
@@ -208,6 +190,19 @@ const EditarEliminar = ({ venta, setActualizar }) => {
         Ciudad: venta.Ciudad,
         Estado: venta.Estado,
     });
+
+    useEffect(() => {
+        const obtenerVendedores = async () => {
+            const options = { method: 'GET', url: 'http://localhost:5000/vendedores' };
+            axios.request(options).then(function (response) {
+                setVendedores(response.data);
+            }).catch(function (error) {
+                console.error(error);
+            });
+        };
+
+        obtenerVendedores();
+    }, [actualizar]);
 
     const actualizaVenta = async () => {
 
@@ -246,14 +241,13 @@ const EditarEliminar = ({ venta, setActualizar }) => {
                 toast.error('Error eliminando la venta');
                 console.error(error);
             });
-
     };
 
     return (
         <tr>
             {editar ? (
                 <>
-                    <td className="align-middle">{venta._id}</td>
+                    <td className="align-middle">{venta._id.slice(20)}</td>
                     <td className="align-middle w-50 text-center">{venta.Fecha}</td>
                     <td className="align-middle"><input className="w-20" name='Cliente' value={datosNuevo.Cliente}
                         onChange={(e) => setDatosNuevo({ ...datosNuevo, Cliente: e.target.value })}
@@ -268,11 +262,13 @@ const EditarEliminar = ({ venta, setActualizar }) => {
                         onChange={(e) => setDatosNuevo({ ...datosNuevo, VrUnit: e.target.value })}
                     /></td>
                     <td className="align-middle"><select id="inputGroupSelect01"
-                        onChange={(e) => setDatosNuevo({ ...datosNuevo, Item: e.target.Vendedor })}>
+                        onChange={(e) => setDatosNuevo({ ...datosNuevo, Vendedor: e.target.value })}>
                         <option value>{datosNuevo.Vendedor}</option>
-                        <option value="Andres">Andres</option>
-                        <option value="Lina">Lina</option>
-                        <option value="Maria">Maria</option>
+                        {vendedores.map((v) => {
+                            return (
+                                <option key={nanoid()}>{v.nombre}</option>
+                            )
+                        })}
                     </select></td>
                     <td className="align-middle"><select id="inputGroupSelect01"
                         onChange={(e) => setDatosNuevo({ ...datosNuevo, Ciudad: e.target.value })}>
@@ -291,7 +287,7 @@ const EditarEliminar = ({ venta, setActualizar }) => {
                 </>
             ) : (
                 <>
-                    <td className="align-middle text-center">{venta._id}</td>
+                    <td className="align-middle text-center">{venta._id.slice(21)}</td>
                     <td className="align-middle text-center">{venta.Fecha}</td>
                     <td className="align-middle">{venta.Cliente}</td>
                     <td className="align-middle">{venta.Item}</td>
@@ -302,7 +298,7 @@ const EditarEliminar = ({ venta, setActualizar }) => {
                     <td className="align-middle">{venta.Estado}</td>
                 </>
             )}
-            <td className="align-middle text-center ">
+            <td className="wd-50 align-middle text-start">
                 <div className='row row-cols-2'>
                     {editar ? (
                         <>
@@ -319,28 +315,7 @@ const EditarEliminar = ({ venta, setActualizar }) => {
                                 data-toggle="tooltip" data-placement="bottom" title="Eliminar venta" />
                         </>
                     )}
-
                 </div>
-                <div class="modal" tabindex="-1" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Modal title</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>¿Esta seguro de eliminar este registro?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary">Eliminar</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </td>
         </tr>
     );
