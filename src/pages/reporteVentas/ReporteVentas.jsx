@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from 'react'
 import Header from '../../components/encabezado/encabezado';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
 import { nanoid } from 'nanoid';
+import { crearVenta, obtenerVentas, editarVenta, deleteVenta, obtenerVendedores } from '../../utils/api';
 
 const ReporteVentas = () => {
 
@@ -11,28 +11,22 @@ const ReporteVentas = () => {
     const [actualizar, setActualizar] = useState(true);
 
     useEffect(() => {
-        const obtenerVentas = async () => {
-            const options = { method: 'GET', url: 'http://localhost:5000/ventas' };
-            axios.request(options).then(function (response) {
-                setVenta(response.data);
-            }).catch(function (error) {
-                console.error(error);
-            });
-        };
+        console.log('consulta', actualizar);
         if (actualizar) {
-            obtenerVentas();
+            obtenerVentas((response) => { setVenta(response.data); },
+                (error) => {
+                    console.error(error);
+                });
             setActualizar(false);
-        };
+        }
     }, [actualizar]);
 
     return (
         <div>
-            <header>
-                <Header />
-                <div className="p-2 border w-75 mt-2 m-auto p-3 mb-2 bg-warning text-black mt-6 d-xl-block d-lg-block d-sm-none text-center">
-                    <h1>Gestión de ventas</h1>
-                </div>
-            </header>
+            <Header />
+            <div className="p-2 border w-75 mt-2 m-auto p-3 mb-2 bg-warning text-black mt-6 d-xl-block d-lg-block d-sm-none text-center">
+                <h1>Gestión de ventas</h1>
+            </div>
             <RegistroVentas setActualizar={setActualizar} actualizar={actualizar} />
             <TablaVentas listaVentas={venta} setActualizar={setActualizar} />
             <ToastContainer position="bottom-center" autoClose={2000} />
@@ -45,16 +39,11 @@ const RegistroVentas = ({ setActualizar, actualizar }) => {
     const [vendedores, setVendedores] = useState([]);
 
     useEffect(() => {
-        const obtenerVendedores = async () => {
-            const options = { method: 'GET', url: 'http://localhost:5000/vendedores' };
-            axios.request(options).then(function (response) {
-                setVendedores(response.data);
-            }).catch(function (error) {
+        obtenerVendedores(
+            (response) => { setVendedores(response.data); },
+            (error) => {
                 console.error(error);
             });
-        };
-
-        obtenerVendedores();
     }, [actualizar]);
 
     const form = useRef(null);
@@ -62,31 +51,24 @@ const RegistroVentas = ({ setActualizar, actualizar }) => {
     const submitFormulario = async (e) => {
         e.preventDefault();
         const fd = new FormData(form.current);
-
         const EnviarAlBack = {};
         fd.forEach((value, key) => {
             EnviarAlBack[key] = value;
         });
 
-        const options = {
-            method: 'POST',
-            url: 'http://localhost:5000/ventas',
-            headers: { 'Content-Type': 'application/json' },
-            data: {
-                Fecha: EnviarAlBack.Fecha, Cliente: EnviarAlBack.Cliente, Item: EnviarAlBack.Item,
-                Cantidad: EnviarAlBack.Cantidad, VrUnit: EnviarAlBack.VrUnit, Vendedor: EnviarAlBack.Vendedor,
-                Ciudad: EnviarAlBack.Ciudad, Estado: EnviarAlBack.Estado
-            }
-        };
-
-        await axios.request(options).then(function (response) {
+        await crearVenta({
+            Fecha: EnviarAlBack.Fecha, Cliente: EnviarAlBack.Cliente, Item: EnviarAlBack.Item,
+            Cantidad: EnviarAlBack.Cantidad, VrUnit: EnviarAlBack.VrUnit, Vendedor: EnviarAlBack.Vendedor,
+            Ciudad: EnviarAlBack.Ciudad, Estado: EnviarAlBack.Estado
+        }, (response) => {
             console.log(response.data);
             toast.warn('Venta registrada exitosamente')
             setActualizar(true);
-        }).catch(function (error) {
+        }, (error) => {
             console.error(error);
             toast.error('Error, venta no registrada')
-        });
+        }
+        );
     };
 
     return (
@@ -192,55 +174,34 @@ const EditarEliminar = ({ venta, setActualizar, actualizar }) => {
     });
 
     useEffect(() => {
-        const obtenerVendedores = async () => {
-            const options = { method: 'GET', url: 'http://localhost:5000/vendedores' };
-            axios.request(options).then(function (response) {
-                setVendedores(response.data);
-            }).catch(function (error) {
+        obtenerVendedores(
+            (response) => { setVendedores(response.data); },
+            (error) => {
                 console.error(error);
             });
-        };
-
-        obtenerVendedores();
     }, [actualizar]);
 
     const actualizaVenta = async () => {
-
-        const options = {
-            method: 'PATCH',
-            url: `http://localhost:5000/ventas/${venta._id}/`,
-            headers: { 'Content-Type': 'application/json' },
-            data: { ...datosNuevo },
-        };
-        await axios.request(options).then(function (response) {
+        await editarVenta(venta._id, datosNuevo, (response) => {
             console.log(response.data);
             toast.warn('Venta actualizada con éxito');
             setEditar(false);
             setActualizar(true);
+        }, (error) => {
+            toast.error('Error modificando la venta');
+            console.error(error);
         })
-            .catch(function (error) {
-                toast.error('Error modificando la venta');
-                console.error(error);
-            });
     };
 
     const eliminarVenta = async () => {
-
-        const options = {
-            method: 'DELETE',
-            url: `http://localhost:5000/ventas/${venta._id}/`,
-            headers: { 'Content-Type': 'application/json' },
-            data: { ...datosNuevo },
-        };
-        await axios.request(options).then(function (response) {
+        await deleteVenta(venta._id, datosNuevo, (response) => {
             console.log(response.data);
             toast.warn('Venta eliminada con éxito');
             setActualizar(true);
-        })
-            .catch(function (error) {
-                toast.error('Error eliminando la venta');
-                console.error(error);
-            });
+        }, (error) => {
+            toast.error('Error eliminando la venta');
+            console.error(error);
+        });
     };
 
     return (
@@ -263,7 +224,7 @@ const EditarEliminar = ({ venta, setActualizar, actualizar }) => {
                     /></td>
                     <td className="align-middle"><select id="inputGroupSelect01"
                         onChange={(e) => setDatosNuevo({ ...datosNuevo, Vendedor: e.target.value })}>
-                        <option value>{datosNuevo.Vendedor}</option>
+                        <option>{datosNuevo.Vendedor}</option>
                         {vendedores.map((v) => {
                             return (
                                 <option key={nanoid()}>{v.nombre}</option>
