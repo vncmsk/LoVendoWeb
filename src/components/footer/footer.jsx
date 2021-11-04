@@ -1,8 +1,10 @@
-import '../../styles/login.css';
-
 
 const PieDePagina = () => {
-    return <div classname="footer"> Colombia - 2021 - Mintic </div>
-  };
-  
+  return (
+  <div>
+    <p className="text-center text-warning bg-black font-weight-light">Bogota D.C. - Colombia - 2021 - Mintic</p>
+  </div>
+  );
+};
+
 export default PieDePagina;

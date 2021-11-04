@@ -1,39 +1,75 @@
 import { Link } from 'react-router-dom';
+import { useAuth0 } from "@auth0/auth0-react";
+import PrivateComp from '../privatecomp/PrivateComp'
 
 function Header() {
-    return (
+  const { logout, user } = useAuth0();
 
-        <div>
-            <nav className="navbar navbar-expand-md bg-dark navbar-dark">
+  const salir = () => {
+    logout({ returnTo: 'http://localhost:3000/login' })
+    localStorage.setItem('token', null);
+  }
 
-                <Link className="nav-link text-light" to='/reporte'><h4>LoVendo.com</h4></Link>
+  return (
+    <div className="row align-items-center justify-content-center">
+      <nav className="navbar navbar-expand-md bg-dark navbar-dark">
+        <ul className="navbar-nav">
 
-                <div className="collapse navbar-collapse" id="collapsibleNavbar">
-                    <ul className="navbar-nav">
-                        <li className="nav-item">
-                            <Link className="nav-link" to='/reporte'>| &nbsp;
-                                <i className="fas fa-cart-arrow-down"></i>&nbsp;&nbsp;Gestion ventas&nbsp;</Link>
-                        </li>
+          <div className="col-3 align-items-center">
+            <li className="nav-item">
+              <Link className="nav-link text-light" to='/reporte'><h4>LoVendo.com</h4></Link></li>
+          </div>
 
-                        <li className="nav-item">
-                            <Link className="nav-link" to='/vendedores'>| &nbsp;
-                                <i className="far fa-address-card"> &nbsp;&nbsp;Gestion vendedores&nbsp;</i></Link>
-                        </li>
+          <div className="col-3 align-self-center">
+            <PrivateComp roleList={['admin']}>
+              <li className="nav-item">
+                <Link className="nav-link" to='/usuarios'>| &nbsp;
+                  <i className="far fa-user-circle"> Gestion usuarios</i></Link></li>
+            </PrivateComp>
+          </div>
 
-                        <li className="nav-item">
-                            <Link className="nav-link" to='/usuarios'>| &nbsp;
-                                <i className="far fa-user-circle"></i>&nbsp;&nbsp;Gestion usuarios&nbsp;</Link>
-                        </li>
+          <div className="col-3 align-self-center">
+            <PrivateComp roleList={['admin', 'vendedor']}>
+              <li className="nav-item">
+                <Link className="nav-link" to='/reporte'>| &nbsp;
+                  <i className="fas fa-cart-arrow-down"></i> Gestion ventas</Link></li>
+            </PrivateComp>
+          </div>
 
-                        <li className="nav-item">
-                            <Link className="nav-link" to='/login'>| &nbsp;
-                                <i className="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Cerrar sesión</Link>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-    );
+          <div className="col-3 align-self-center">
+            <PrivateComp roleList={['admin', 'vendedor']}>
+              <li className="nav-item">
+                <Link className="nav-link" to='/productos'>| &nbsp;
+                  <i className="fas fa-boxes"> Gestion productos</i></Link></li>
+            </PrivateComp>
+          </div>
+
+          <div className="col-1 align-self-center">
+            <PrivateComp roleList={['admin', 'vendedor']}>
+              <li className="nav-item">
+                <Link className="nav-link" to='/perfil'>| &nbsp;
+                  <img src={user.picture} width="30px" alt="Logo" className="rounded" /></Link></li>
+            </PrivateComp>
+          </div>
+
+          <div className="col-2 align-self-center">
+            <PrivateComp roleList={['admin', 'vendedor']}>
+              <li className="nav-item">
+                <Link className="nav-link" to='/perfil'>
+                  <i className="">{user.name}&nbsp;</i></Link></li>
+            </PrivateComp>
+          </div>
+
+          <div className="col-2 align-self-center">
+            <li className="nav-item">
+              <Link onClick={() => salir()} className="nav-link" to='/login'>| &nbsp;
+                <i className="fas fa-sign-out-alt"> Salir</i></Link></li>
+          </div>
+        </ul>
+      </nav>
+    </div>
+
+  );
 }
 
 export default Header;
