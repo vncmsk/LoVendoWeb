@@ -272,9 +272,6 @@ const EditarEliminar = ({ venta, setActualizar, actualizar }) => {
 					<td className="align-middle w-100 text-center">{venta.Fecha}</td>
 					<td className="align-middle"><input className="w-20" name='Cliente' value={datosNuevo.Cliente}
 						onChange={(e) => setDatosNuevo({ ...datosNuevo, Cliente: e.target.value })} /></td>
-
-					{/* No renderiza el cambio*/}
-
 					<td className="align-middle"><select id="inputGroupSelectItem"
 						onChange={(e) => setDatosNuevo({ ...datosNuevo, Item: e.target.value })}>
 						<option value>{datosNuevo.Item.Item}</option>
@@ -284,15 +281,10 @@ const EditarEliminar = ({ venta, setActualizar, actualizar }) => {
 							)
 						})}
 					</select></td>
-
-
 					<td className="align-middle"><input className="input-group input-group-sm mb-1 text-center"
 						min="1" max="9999" type="number" value={datosNuevo.Cantidad}
 						onChange={(e) => setDatosNuevo({ ...datosNuevo, Cantidad: e.target.value })} /></td>
 					<td className="align-middle w-25 text-center">${venta.Item.VrUnit}</td>
-
-					{/* No renderiza el cambio*/}
-
 					<td className="align-middle"><select id="inputGroupSelectVendedor"
 						onChange={(e) => setDatosNuevo({ ...datosNuevo, Vendedor: e.target.value })}>
 						<option value>{datosNuevo.Vendedor.name}</option>
@@ -302,8 +294,6 @@ const EditarEliminar = ({ venta, setActualizar, actualizar }) => {
 							)
 						})}
 					</select></td>
-
-
 					<td className="align-middle"><select id="inputGroupSelectCiudad"
 						onChange={(e) => setDatosNuevo({ ...datosNuevo, Ciudad: e.target.value })}>
 						<option value>{datosNuevo.Ciudad}</option>
