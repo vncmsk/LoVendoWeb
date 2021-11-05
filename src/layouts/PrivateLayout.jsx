@@ -43,17 +43,16 @@ const PrivateLayout = ({ children }) => {
   )
   if (!isAuthenticated) {
     return loginWithRedirect();
-  } else {
-    return (
-      <div className="w-screen h-screen">
-        <Header />
-        <main className='flex w-full  overflow-y-scroll items-center justify-center'>
-          {children}
-        </main>
-      </div>
-    )
-  };
-}
+  }
 
+  return (
+    <div className="w-screen h-screen">
+      <Header />
+      <main className='flex w-full  overflow-y-scroll items-center justify-center'>
+        {children}
+      </main>
+    </div>
+  )
+};
 
 export default PrivateLayout

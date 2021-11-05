@@ -9,7 +9,7 @@ function PerfilUsuario() {
 
       <h3 className="p-2 w-75 my-4 m-auto p-3 mb-2 text-black 
 				d-xl-block d-lg-block d-sm-none text-center">Bienvenid@!</h3>
-      <h3 className="p-2 w-75 my-4 m-auto p-3 mb-2 text-black 
+      <h3 className="p-2 w-75 my-2 m-auto p-3 mb-2 text-black 
 				d-xl-block d-lg-block d-sm-none text-center">Este es el control y gestion de ventas de LoVendo.com</h3>
       
       <PrivateComp roleList={['admin', 'vendedor', 'sin rol']}>
