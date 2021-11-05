@@ -1,17 +1,9 @@
-<<<<<<< HEAD
-import {BrowserRouter as Router,Route,Switch,Link} from 'react-router-dom'
-import Login from './components/login/Login';
-import gestionUsuarios from './components/gestionUsuarios/gestionUsuarios';
-import gestionVendedores from './components/gestionVendedores/gestionVendedores';
-import ReporteVentas from './components/reporteVentas/ReporteVentas';
-=======
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import {BrowserRouter as Router,Route,Switch} from 'react-router-dom'
 import Login from './pages/login/Login';
-import GestionUsuarios from './pages/gestionUsuarios/GestionUsuarios';
-import ReporteVentas from './pages/reporteVentas/ReporteVentas';
+import GestionUsuarios from './pages/gestionUsuarios/gestionUsuarios';
 import GestionProductos from './pages/gestionProductos/GestionProductos';
+import ReporteVentas from './pages/reporteVentas/ReporteVentas';
 import PerfilUsuario from './pages/profile/profile';
->>>>>>> desarrollo
 import 'bootstrap/dist/css/bootstrap.css';
 import { Auth0Provider } from "@auth0/auth0-react";
 import { UserContext } from './context/usercontext';
@@ -25,19 +17,6 @@ function App() {
   const [userData, setUserData] = useState({});
 
   return (
-<<<<<<< HEAD
-    <div>
-      <Router>
-            <Switch>
-              <Route exact path='/' component={Login} />
-              <Route exact path='/login' component={Login} />
-              <Route exact path='/usuarios' component={gestionUsuarios} />
-              <Route exact path='/vendedores' component={gestionVendedores} />
-              <Route exact path='/reporte' component={ReporteVentas} />
-            </Switch>
-      </Router>
-    </div>
-=======
     <Auth0Provider
       domain="lovendo.us.auth0.com"
       clientId="DxYz0F52Edjs1lQpP8pWk6HcjeUYE2wP"
@@ -99,7 +78,6 @@ function App() {
         </UserContext.Provider>
       </div>
     </Auth0Provider>
->>>>>>> desarrollo
   );
 }
 
