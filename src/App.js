@@ -20,7 +20,7 @@ function App() {
     <Auth0Provider
       domain="lovendo.us.auth0.com"
       clientId="DxYz0F52Edjs1lQpP8pWk6HcjeUYE2wP"
-      redirectUri={'http://localhost:3000/perfil'}
+      redirectUri={'https://tranquil-tundra-14749.herokuapp.com/perfil'}
       audience='https://lovendo.us.auth0.com/api/v2/'
     >
       <div className='App'>
