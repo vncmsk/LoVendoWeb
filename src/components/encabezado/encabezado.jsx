@@ -56,13 +56,13 @@ function Header() {
             <PrivateComp roleList={['admin', 'vendedor']}>
               <li className="nav-item">
                 <Link className="nav-link" to='/perfil'>
-                  <i className="">{user.name}&nbsp;</i></Link></li>
+                  <i className="">{user.name}&nbsp;|</i></Link></li>
             </PrivateComp>
           </div>
 
           <div className="col-2 align-self-center">
             <li className="nav-item">
-              <Link onClick={() => salir()} className="nav-link" to='/login'>| &nbsp;
+              <Link onClick={() => salir()} className="nav-link" to='/login'>&nbsp;
                 <i className="fas fa-sign-out-alt"> Salir</i></Link></li>
           </div>
         </ul>
