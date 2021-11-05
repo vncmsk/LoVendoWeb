@@ -6,7 +6,7 @@ function Header() {
   const { logout, user } = useAuth0();
 
   const salir = () => {
-    logout({ returnTo: 'http://localhost:3000/login' })
+    logout({ returnTo: 'https://tranquil-tundra-14749.herokuapp.com/login' })
     localStorage.setItem('token', null);
   }
 
